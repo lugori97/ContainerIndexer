@@ -249,8 +249,8 @@ int main()
 
     if (opcion == 3){
         printf("INGRESE LA INFORMACION DEL CONTENEDOR\n");
-        printf("ID, Estado, Nave, Destino, Valor de Carga\n");
-        printf("Recuerde separar con una ','  ejemplo : 99,DesEmbarque,TITANIC,Chile,5\n");
+        printf("ID,Estado,Nave,Destino,Valor de Carga\n");
+        printf("Recuerde separar con una ','  ejemplo : 99,Desembarque,TITANIC,Chile,5\n");
         scanf("%s", linea);
         contenedor = crearContenedor(linea);
         if (searchMap(mapa_contenedores,contenedor->id) ==NULL){
@@ -469,6 +469,7 @@ int main()
                     contenedor = firstMap(mapa_aux);
                     printf("Contenedores con estado: Despachado  \n");
                     while (contenedor != NULL){
+                            printf("exito");
                         printf("\nCONTENEDOR-> ");
                         printf("ID: %s ", contenedor->id);
                         printf("ESTADO: %s ", contenedor->estado);
@@ -484,7 +485,7 @@ int main()
         }
         if(opcion==6){
             int opcionc=0;
-            printf("INGRESE EL NUMERO DE LA OPCION CORRESPONDIENTE:\n1) Mostrar Listado de Naves \n2) Atracar Nave \n3) Desatracar Nave \n");
+            printf("INGRESE EL NUMERO DE LA OPCION CORRESPONDIENTE:\n1) Mostrar Listado de Naves \n2) Atracar Nave \n3) Desatracar Nave\n");
             getchar();
             scanf("%d",&opcionc);
             if (opcionc==1){
@@ -509,75 +510,102 @@ int main()
                     scanf("%90[^\n]s", nombre_nave);
                     getchar();
                     nave = searchMap(mapa_control_nave,nombre_nave);
-                    if (nave!=NULL){
-                        strcpy(nave->Estado,"Atracada");//strcpy
-                    }
+                    if (nave==NULL || strcmp(nave->Estado,"Atracada")==0){
+                        printf("No es posible atracar Nave, no existe o ya esta atracada\n");
+                    }else{
                     printf("Ingrese el numero del Puerto en donde atracar la nave:\n1)Puerto_uno   2)Puerto_dos   3)Puerto_tres\n");
-
                     int op;
                     scanf("%d", &op);
                     if (op == 1 && plataforma->puerto_uno->estado == false){
                         plataforma->puerto_uno->estado = true;
                         strcpy(plataforma->puerto_uno->nombre_nave, nombre_nave);
+                        strcpy(nave->Estado,"Atracada");
                         printf("\nNave Atracada con exito!\n");
-                    }if (op == 2 && plataforma->puerto_dos->estado == false){
+                    }else
+                    if (op == 2 && plataforma->puerto_dos->estado == false){
                         plataforma->puerto_dos->estado = true;
                         strcpy(plataforma->puerto_dos->nombre_nave, nombre_nave);
-                    }if (op == 3 && plataforma->puerto_tres->estado == false){
+                        strcpy(nave->Estado,"Atracada");
+                         printf("\nNave Atracada con exito!\n");
+                    }else
+                    if (op == 3 && plataforma->puerto_tres->estado == false){
                         plataforma->puerto_tres->estado = true;
                         strcpy(plataforma->puerto_tres->nombre_nave, nombre_nave);
-                    }
+                        strcpy(nave->Estado,"Atracada");
+                         printf("\nNave Atracada con exito!\n");
+                    }else{printf("\nNo ha sido posible atracar la nave, puerto ocupado!\n");}
+                }
                 }else{printf("\nNo hay DOCKS Disponibles\n");}
             }
             if (opcionc==3){
                 if(plataforma->puerto_uno->estado==false && plataforma->puerto_dos->estado==false && plataforma->puerto_tres->estado==false){
                         printf("\nNo Hay Naves Atracadas!\n");
                 }else{
-                    printf("Seleccione numero de Nave Disponible a Desatracar\n\n");
-                    if (plataforma->puerto_uno->estado){
-                        nave = searchMap(mapa_control_nave,plataforma->puerto_uno->nombre_nave);
-                        if(strcmp(nave->Estado,"Despachada")==0)
+                    printf("Seleccione numero de Nave a Desatracar\n\n");
+
+                    if (plataforma->puerto_uno->estado==true){
                         printf("1) Puerto_uno: Nave-> %s\n",plataforma->puerto_uno->nombre_nave);
-                    }else if (plataforma->puerto_dos->estado){
-                        nave = searchMap(mapa_control_nave,plataforma->puerto_uno->nombre_nave);
-                        if(strcmp(nave->Estado,"Despachada")==0)
+                    }
+                    if (plataforma->puerto_dos->estado==true){
                         printf("2) Puerto_dos: Nave-> %s\n",plataforma->puerto_dos->nombre_nave);
-                    }else if (plataforma->puerto_tres->estado){
-                        nave = searchMap(mapa_control_nave,plataforma->puerto_uno->nombre_nave);
-                        if(strcmp(nave->Estado,"Despachada")==0)
+                    }
+                    if (plataforma->puerto_tres->estado==true){
                         printf("3) Puerto_tres: Nave-> %s\n",plataforma->puerto_tres->nombre_nave);
-                    }else{printf("\nDe las naves Atracadas ninguna esta disponible para ser Desatracada, pues no han cumplido su itinerario\n");}
+                    }
                     int opciond;
-                    getchar();
                     scanf("%d",&opciond);
-                    if (opciond==1){
 
-                        plataforma->puerto_uno->estado = false;
-                        printf("\nNave Desatracada con exito\n");
+                    if (opciond==1 && plataforma->puerto_uno->estado==true){
+                        nave = searchMap(mapa_control_nave,plataforma->puerto_uno->nombre_nave);
+                        if(strcmp(nave->Estado,"Despachada")==0){
+                            plataforma->puerto_uno->estado = false;
+                            printf("\nNave Desatracada con exito\n");
+                        }else printf("\nNo se puede desatracar, la Nave no ha cumplido su itinerario\n");
+                    }else
+                    if(opciond==2 && plataforma->puerto_dos->estado==true){
+                        nave = searchMap(mapa_control_nave,plataforma->puerto_uno->nombre_nave);
+                        if(strcmp(nave->Estado,"Despachada")==0){
+                            plataforma->puerto_dos->estado = false;
+                            printf("\nNave Desatracada con exito\n");
+                        }
 
-                    }else if(opciond==2){
-
-                        plataforma->puerto_dos->estado = false;
-
-                    }else if(opciond==3){
-
-                        plataforma->puerto_tres->estado = false;
+                    }else
+                    if(opciond==3 && plataforma->puerto_tres->estado==true){
+                        nave = searchMap(mapa_control_nave,plataforma->puerto_uno->nombre_nave);
+                        if(strcmp(nave->Estado,"Despachada")==0){
+                            plataforma->puerto_tres->estado = false;
+                            printf("\nNave Desatracada con exito\n");
+                        }
 
                     }else{printf("\nOpcion NO VALIDA\n");}
                 }
             }
         }
         if(opcion==7){
-            if(plataforma->puerto_uno->estado || plataforma->puerto_dos->estado ||plataforma->puerto_tres->estado){
-                if(plataforma->puerto_uno->estado){
+            if(plataforma->puerto_uno->estado==true || plataforma->puerto_dos->estado==true ||plataforma->puerto_tres->estado==true){
+                if(plataforma->puerto_uno->estado==true){
+
                     nave = searchMap(mapa_control_nave,plataforma->puerto_uno->nombre_nave);
                     //Desembarque
                     if (strcmp(nave->Destino,"Chile")==0 && strcmp(nave->Estado,"Atracada")==0){
+                        printf("Puerto uno: NAVE -> %s \n",plataforma->puerto_uno->nombre_nave);
                         mapa_aux = searchMap(mapa_estado,"Desembarque");
                         contenedor = firstMap(mapa_aux);
+
                         while (contenedor != NULL){
-                            if (strcmp(contenedor->nave,nave->Nombre)==0)
-                                strcpy(contenedor->estado,"Despachado");
+                            if (strcmp(contenedor->nave,nave->Nombre)==0){
+                                strcpy(contenedor->estado,"Destino");
+
+                                Map * mapa_aux_estado = createMap(stringHash, stringEqual);
+                                if (searchMap(mapa_estado,contenedor->estado)== NULL){
+                                    insertMap(mapa_aux_estado,contenedor->id, contenedor);
+                                    insertMap(mapa_estado,contenedor->estado, mapa_aux_estado);
+                                }else{
+                                    mapa_aux_estado =searchMap(mapa_estado,contenedor->estado);
+                                    insertMap(mapa_aux_estado,contenedor->id,contenedor);
+                                }
+                            }
+                            eraseKeyMap(mapa_aux,contenedor->id);
                             contenedor= nextMap(mapa_aux);
                         }
                         strcpy(nave->Estado,"Despachada");
@@ -594,17 +622,31 @@ int main()
                         }
                     }
                 }
-                if(plataforma->puerto_dos->estado){
+                if(plataforma->puerto_dos->estado==true){
                     nave = searchMap(mapa_control_nave,plataforma->puerto_dos->nombre_nave);
                     //Desembarque
                     if (strcmp(nave->Destino,"Chile")==0 && strcmp(nave->Estado,"Atracada")==0){
+                        printf("Puerto dos: NAVE -> %s \n",plataforma->puerto_uno->nombre_nave);
                         mapa_aux = searchMap(mapa_estado,"Desembarque");
                         contenedor = firstMap(mapa_aux);
+
                         while (contenedor != NULL){
-                            if (strcmp(contenedor->nave,nave->Nombre)==0)
-                                strcpy(contenedor->estado,"Despachado");
+                            if (strcmp(contenedor->nave,nave->Nombre)==0){
+                                strcpy(contenedor->estado,"Destino");
+
+                                Map * mapa_aux_estado = createMap(stringHash, stringEqual);
+                                if (searchMap(mapa_estado,contenedor->estado)== NULL){
+                                    insertMap(mapa_aux_estado,contenedor->id, contenedor);
+                                    insertMap(mapa_estado,contenedor->estado, mapa_aux_estado);
+                                }else{
+                                    mapa_aux_estado =searchMap(mapa_estado,contenedor->estado);
+                                    insertMap(mapa_aux_estado,contenedor->id,contenedor);
+                                }
+                            }
+                            eraseKeyMap(mapa_aux,contenedor->id);
                             contenedor= nextMap(mapa_aux);
                         }
+                        strcpy(nave->Estado,"Despachada");
 
                     }else if(strcmp(nave->Destino,"Chile")!=0 && strcmp(nave->Estado,"Atracada")==0){
                         mapa_aux = searchMap(mapa_estado,"Embarque");
@@ -617,17 +659,31 @@ int main()
                             contenedor= nextMap(mapa_aux);
                         }
                     }
-                }if(plataforma->puerto_tres->estado){
+                }if(plataforma->puerto_tres->estado==true){
                     nave = searchMap(mapa_control_nave,plataforma->puerto_tres->nombre_nave);
                     //Desembarque
                     if (strcmp(nave->Destino,"Chile")==0 && strcmp(nave->Estado,"Atracada")==0){
+                        printf("Puerto tres: NAVE -> %s \n",plataforma->puerto_uno->nombre_nave);
                         mapa_aux = searchMap(mapa_estado,"Desembarque");
                         contenedor = firstMap(mapa_aux);
+
                         while (contenedor != NULL){
-                            if (strcmp(contenedor->nave,nave->Nombre)==0)
-                                strcpy(contenedor->estado,"Despachado");
+                            if (strcmp(contenedor->nave,nave->Nombre)==0){
+                                strcpy(contenedor->estado,"Destino");
+
+                                Map * mapa_aux_estado = createMap(stringHash, stringEqual);
+                                if (searchMap(mapa_estado,contenedor->estado)== NULL){
+                                    insertMap(mapa_aux_estado,contenedor->id, contenedor);
+                                    insertMap(mapa_estado,contenedor->estado, mapa_aux_estado);
+                                }else{
+                                    mapa_aux_estado =searchMap(mapa_estado,contenedor->estado);
+                                    insertMap(mapa_aux_estado,contenedor->id,contenedor);
+                                }
+                            }
+                            eraseKeyMap(mapa_aux,contenedor->id);
                             contenedor= nextMap(mapa_aux);
                         }
+                        strcpy(nave->Estado,"Despachada");
 
                     }else if(strcmp(nave->Destino,"Chile")!=0 && strcmp(nave->Estado,"Atracada")==0){
                         mapa_aux = searchMap(mapa_estado,"Embarque");
@@ -641,9 +697,30 @@ int main()
                         }
                     }
                 }
-                printf("Operaciones realizada con exito\n");
+                printf("Operaciones realizadas con exito\n");
             }else{printf("\nNo hay Naves Atracadas disponibles para hacer operaciones\n");}
+        }if(opcion==8){
+            mapa_aux = searchMap(mapa_estado,"Destino");
+            contenedor = firstMap(mapa_aux);
+                        while (contenedor != NULL){
+                                strcpy(contenedor->estado,"Despachado");
+
+                                Map * mapa_aux_estado = createMap(stringHash, stringEqual);
+                                if (searchMap(mapa_estado,contenedor->estado)== NULL){
+                                    insertMap(mapa_aux_estado,contenedor->id, contenedor);
+                                    insertMap(mapa_estado,contenedor->estado, mapa_aux_estado);
+                                }else{
+                                    mapa_aux_estado =searchMap(mapa_estado,contenedor->estado);
+                                    insertMap(mapa_aux_estado,contenedor->id,contenedor);
+                                }
+                            eraseKeyMap(mapa_aux,contenedor->id);
+                            contenedor= nextMap(mapa_aux);
+                            }
+                printf("\nTODOS LOS CONTENDERES EN DESTINO HAN SIDO DESPACHADOS\n");
+
         }
+
+
 
 
     }while(opcion!=0);

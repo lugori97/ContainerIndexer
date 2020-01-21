@@ -1,0 +1,20 @@
+	      __
+          ___|__|_
+   _______|_______|__	 ____________              Plataforma
+   \                /----| Puerto Uno         Valor de Carga actual: 231
+    \REINAELIZABETH/	 |                    Valor de Carga Maximo: 250
+     \____________/      |                    Numero de contenedores
+                                              en plataforma: 90
+	      __
+          ___|__|_
+   _______|_______|__	 ____________
+   \                /----| Puerto Dos
+    \  TITANIC     /	 |
+     \____________/      |
+
+	      __         
+          ___|__|_           
+   _______|_______|__	 ____________
+   \                /----| Puerto Tres
+    \  TITANIC     /	 |
+     \____________/      |
